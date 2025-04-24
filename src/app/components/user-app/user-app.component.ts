@@ -38,22 +38,39 @@ export class UserAppComponent implements OnInit {
   addUser() {
     this.sharingData.newUserEventEmitter.subscribe(user => {
       if (user.id > 0) {
-        this.service.update(user).subscribe(userUpdated => {
+        this.service.update(user).subscribe({next: (userUpdated) => {
           this.users = this.users.map(userItem => (userItem.id === userUpdated.id) ? {...userUpdated} : userItem);
-          this.router.navigate(['/users']);
-        });
+          this.router.navigate(['/users'], {state: {users: this.users}});
+          //this.router.navigate(['/users']);
+            Swal.fire({
+              title: "Good job user updated!",
+              text: "You clicked the button!",
+              icon: "success"
+            });
+        }, error: (err) => {
+            //console.log(err.error);
+            if (err.status === 400) {
+              this.sharingData.errorsUserFormEventEmitter.emit(err.error);
+            }
+        }})
       } else {
-        this.service.create(user).subscribe(userNew => {
+        this.service.create(user).subscribe({next: (userNew) => {
           this.users = [...this.users, {...userNew}];
-          this.router.navigate(['/users']);
-        });
-      }
+          this.router.navigate(['/users'], {state: {users: this.users} });
+          //this.router.navigate(['/users']);
 
-      Swal.fire({
-        title: "Good job!",
-        text: "You clicked the button!",
-        icon: "success"
-      });
+          Swal.fire({
+            title: "Good job user created!",
+            text: "You clicked the button!",
+            icon: "success"
+          });
+        }, error: (err) => {
+          //console.log(err.error);
+            if (err.status === 400) {
+              this.sharingData.errorsUserFormEventEmitter.emit(err.error);
+            }
+          }});
+      }
     });
   }
 
@@ -72,7 +89,8 @@ export class UserAppComponent implements OnInit {
           this.service.remove(id).subscribe(() => {
             this.users = this.users.filter(user => user.id !== id);
             this.router.navigate(['/users/create'], {skipLocationChange: true}).then(() => {
-              this.router.navigate(['/users']);
+              this.router.navigate(['/users'], {state: {users: this.users} });
+              //this.router.navigate(['/users']);
             });
           });
           Swal.fire({

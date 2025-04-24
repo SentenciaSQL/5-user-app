@@ -16,12 +16,14 @@ import {UserService} from "../../services/user.service";
 export class UserFormComponent implements OnInit {
 
   user: User;
+  errors: any = {};
 
   constructor(private sharingDta: SharingDataService, private route: ActivatedRoute, private userService: UserService) {
     this.user = new User();
   }
 
   ngOnInit(): void {
+    this.sharingDta.errorsUserFormEventEmitter.subscribe(errors => this.errors = errors);
     this.sharingDta.selectedUserEventEmitter.subscribe(user => this.user = user);
 
     this.route.params.subscribe(params => {
@@ -35,13 +37,13 @@ export class UserFormComponent implements OnInit {
   }
 
   onSubmit(userForm: NgForm) {
-    if (userForm.valid) {
+    //if (userForm.valid) {
       this.sharingDta.newUserEventEmitter.emit(this.user);
       console.log(this.user);
-    }
+    //}
 
-    userForm.reset();
-    userForm.resetForm();
+    // userForm.reset();
+    // userForm.resetForm();
   }
 
   onClear(userForm: NgForm) {

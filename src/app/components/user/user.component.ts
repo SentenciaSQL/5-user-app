@@ -20,7 +20,7 @@ export class UserComponent implements OnInit {
   constructor(private router: Router, private service: UserService, private sharingDta: SharingDataService) {
     if (this.router.getCurrentNavigation()?.extras.state) {
       const user = this.router.getCurrentNavigation()?.extras.state!['user'];
-      this.users = [...this.users, user];
+      //this.users = [...this.users, user];
     }
   }
 

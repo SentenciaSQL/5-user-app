@@ -14,6 +14,97 @@
               name="name"
               placeholder="Name"
               [(ngModel)]="user.name"
+              #name="ngModel">
+
+            @if (errors.name) {
+              <div class="text-danger" role="alert">
+                {{ errors.name }}
+              </div>
+            }
+
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control my-2"
+              id="lastname"
+              name="lastname"
+              placeholder="Lastname"
+              [(ngModel)]="user.lastname"
+              #lastname="ngModel">
+
+            @if (errors.lastname) {
+              <div class="text-danger" role="alert">
+                {{ errors.lastname }}
+              </div>
+            }
+          </div>
+          <div class="form-group">
+            <input
+              type="email"
+              class="form-control my-2"
+              id="email"
+              name="email"
+              placeholder="Email"
+              [(ngModel)]="user.email"
+              #email="ngModel">
+
+            @if (errors.email) {
+              <div class="text-danger" role="alert">
+                {{ errors.email }}
+              </div>
+            }
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control my-2"
+              id="username"
+              name="username"
+              placeholder="Username"
+              [(ngModel)]="user.username"
+              #username="ngModel">
+
+            @if (errors.username) {
+              <div class="text-danger" role="alert">
+                {{ errors.username }}
+              </div>
+            }
+
+          </div>
+          <div class="form-group">
+            <input
+              type="password"
+              class="form-control my-2"
+              id="password"
+              name="password"
+              placeholder="Password"
+              [(ngModel)]="user.password"
+              #password="ngModel">
+
+            @if (errors.password) {
+              <div class="text-danger" role="alert">
+                {{ errors.password }}
+              </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary m-2">{{ (user.id > 0) ? "Update": "Create" }}</button>
+            <button type="button" class="btn btn-secondary my-2" (click)="onClear(userForm)">Clear</button>
+          </div>
+        </form>
+
+        <!-- Original
+        <form (ngSubmit)="onSubmit(userForm)" #userForm="ngForm">
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control my-2"
+              id="name"
+              name="name"
+              placeholder="Name"
+              [(ngModel)]="user.name"
               required
               #name="ngModel">
 
@@ -129,7 +220,7 @@
             <button type="button" class="btn btn-secondary my-2" (click)="onClear(userForm)">Clear</button>
           </div>
         </form>
-
+        -->
       </div>
     </div>
 </div>
