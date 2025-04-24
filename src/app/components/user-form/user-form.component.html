@@ -1,0 +1,136 @@
+<div class="card">
+    <div class="card-content">
+      <div class="card-header">
+        <h5 class="card-title">Form {{ (user.id > 0) ? "Update": "Create" }}</h5>
+      </div>
+      <div class="card-body">
+
+        <form (ngSubmit)="onSubmit(userForm)" #userForm="ngForm">
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control my-2"
+              id="name"
+              name="name"
+              placeholder="Name"
+              [(ngModel)]="user.name"
+              required
+              #name="ngModel">
+
+            @if (name.invalid && (name.dirty || name.touched)) {
+              @if (name.errors?.['required']) {
+                <div class="text-danger" role="alert">
+                  Name is required
+                </div>
+              }
+            }
+
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control my-2"
+              id="lastname"
+              name="lastname"
+              placeholder="Lastname"
+              [(ngModel)]="user.lastname"
+              required
+              #lastname="ngModel">
+
+            @if (lastname.invalid && (lastname.dirty || lastname.touched)) {
+              @if (lastname.errors?.['required']) {
+                <div class="text-danger" role="alert">
+                  Lastname is required
+                </div>
+              }
+            }
+          </div>
+          <div class="form-group">
+            <input
+              type="email"
+              class="form-control my-2"
+              id="email"
+              name="email"
+              email
+              placeholder="Email"
+              [(ngModel)]="user.email"
+              required
+              #email="ngModel">
+
+            @if (email.invalid && (email.dirty || email.touched)) {
+              @if (email.errors?.['required']) {
+                <div class="text-danger" role="alert">
+                  Email is required
+                </div>
+              }
+
+              @if (email.errors?.['email']) {
+                <div class="text-danger" role="alert">
+                  Email is invalid
+                </div>
+              }
+            }
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control my-2"
+              id="username"
+              name="username"
+              placeholder="Username"
+              [(ngModel)]="user.username"
+              required
+              minlength="8"
+              #username="ngModel">
+
+            @if (username.invalid && (username.dirty || username.touched)) {
+              @if (username.errors?.['required']) {
+                <div class="text-danger" role="alert">
+                  Username is required
+                </div>
+              }
+
+              @if (username.errors?.['minlength']) {
+                <div class="text-danger" role="alert">
+                  Username must have at least 8 characters
+                </div>
+              }
+            }
+          </div>
+          <div class="form-group">
+            <input
+              type="password"
+              class="form-control my-2"
+              id="password"
+              name="password"
+              placeholder="Password"
+              [(ngModel)]="user.password"
+              required
+              minlength="6"
+              #password="ngModel">
+
+            @if (password.invalid && (password.dirty || password.touched)) {
+              @if (password.errors?.['required']) {
+                <div class="text-danger" role="alert">
+                  Password is required
+                </div>
+              }
+
+              @if (password.errors?.['minlength']) {
+                <div class="text-danger" role="alert">
+                  Password must have at most 6 characters
+                </div>
+              }
+            }
+          </div>
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary m-2" [disabled]="userForm.invalid">{{ (user.id > 0) ? "Update": "Create" }}</button>
+            <button type="button" class="btn btn-secondary my-2" (click)="onClear(userForm)">Clear</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+</div>
+
