@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {User} from "../../models/user";
 import {UserService} from "../../services/user.service";
 import Swal from 'sweetalert2'
-import {Router, RouterOutlet} from "@angular/router";
+import {ActivatedRoute, Router, RouterOutlet} from "@angular/router";
 import {NavbarComponent} from "../navbar/navbar.component";
 import {SharingDataService} from "../../services/sharing-data.service";
 
@@ -16,15 +16,28 @@ import {SharingDataService} from "../../services/sharing-data.service";
 export class UserAppComponent implements OnInit {
 
   users: User[] = [];
+  paginator: any = {};
 
-  constructor(private service: UserService, private sharingData: SharingDataService, private router: Router) {
+  constructor(private service: UserService, private sharingData: SharingDataService, private router: Router, private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    this.service.findAll().subscribe(users => this.users = users);
+    //this.service.findAll().subscribe(users => this.users = users);
+    // this.route.paramMap.subscribe(params => {
+    //   const page = +(params.get('page')!) || 0;
+    //   //this.service.findAllPageable(page).subscribe(pageable => this.users = pageable.content as User[]);
+    // });
     this.addUser();
     this.removeUser();
     this.findUserById()
+    this.pageUsersEvent();
+  }
+
+  pageUsersEvent() {
+    this.sharingData.pageUsersEventEmitter.subscribe(pageable => {
+      this.users = pageable.users;
+      this.paginator = pageable.paginator;
+    });
   }
 
   findUserById() {
@@ -40,15 +53,13 @@ export class UserAppComponent implements OnInit {
       if (user.id > 0) {
         this.service.update(user).subscribe({next: (userUpdated) => {
           this.users = this.users.map(userItem => (userItem.id === userUpdated.id) ? {...userUpdated} : userItem);
-          this.router.navigate(['/users'], {state: {users: this.users}});
-          //this.router.navigate(['/users']);
+          this.router.navigate(['/users'], {state: {users: this.users, paginator: this.paginator} });
             Swal.fire({
               title: "Good job user updated!",
               text: "You clicked the button!",
               icon: "success"
             });
         }, error: (err) => {
-            //console.log(err.error);
             if (err.status === 400) {
               this.sharingData.errorsUserFormEventEmitter.emit(err.error);
             }
@@ -56,16 +67,13 @@ export class UserAppComponent implements OnInit {
       } else {
         this.service.create(user).subscribe({next: (userNew) => {
           this.users = [...this.users, {...userNew}];
-          this.router.navigate(['/users'], {state: {users: this.users} });
-          //this.router.navigate(['/users']);
-
+          this.router.navigate(['/users'], {state: {users: this.users, paginator: this.paginator} });
           Swal.fire({
             title: "Good job user created!",
             text: "You clicked the button!",
             icon: "success"
           });
         }, error: (err) => {
-          //console.log(err.error);
             if (err.status === 400) {
               this.sharingData.errorsUserFormEventEmitter.emit(err.error);
             }

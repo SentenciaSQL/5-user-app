@@ -11,6 +11,7 @@ export class SharingDataService {
   private _findUserByIdEventEmitter = new EventEmitter();
   private _selectedUserEventEmitter = new EventEmitter<User>();
   private _errorsUserFormEventEmitter = new EventEmitter();
+  private _pageUsersEventEmitter = new EventEmitter();
 
   constructor() { }
 
@@ -32,6 +33,10 @@ export class SharingDataService {
 
   get errorsUserFormEventEmitter() {
     return this._errorsUserFormEventEmitter;
+  }
+
+  get pageUsersEventEmitter() {
+    return this._pageUsersEventEmitter;
   }
 
 }
