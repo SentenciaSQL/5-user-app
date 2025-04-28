@@ -28,6 +28,7 @@ export class UserFormComponent implements OnInit {
 
     this.route.params.subscribe(params => {
       const id: number = params['id'] || 0;
+      console.log('id: ' + id);
 
       if (id > 0) {
         this.sharingDta.findUserByIdEventEmitter.emit(id);
