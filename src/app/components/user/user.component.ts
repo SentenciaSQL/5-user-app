@@ -1,10 +1,12 @@
-import {Component, EventEmitter, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {User} from "../../models/user";
-import {ActivatedRoute, Router, RouterLink, RouterModule} from "@angular/router";
-import {UserService} from "../../services/user.service";
+import {ActivatedRoute, Router, RouterModule} from "@angular/router";
 import {SharingDataService} from "../../services/sharing-data.service";
 import {PaginatorComponent} from "../paginator/paginator.component";
 import {AuthService} from "../../services/auth.service";
+import {Store} from "@ngrx/store";
+import {load, remove} from "../../store/users.actions";
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'user',
@@ -20,30 +22,38 @@ export class UserComponent implements OnInit {
   users: User[] = [];
   paginator: any = {};
 
-  constructor(private router: Router, private service: UserService, private sharingDta: SharingDataService, private route: ActivatedRoute, private authService: AuthService) {
-    if (this.router.getCurrentNavigation()?.extras.state) {
-      const user = this.router.getCurrentNavigation()?.extras.state!['user'];
-      const paginator = this.router.getCurrentNavigation()?.extras.state!['paginator'];
-      //this.users = [...this.users, user];
-    }
+  constructor(
+    private store: Store<{users: any}>,
+    private router: Router,
+    private sharingDta: SharingDataService,
+    private route: ActivatedRoute,
+    private authService: AuthService) {
+
+    this.store.select('users').subscribe(state => {
+      this.users = state.users;
+      this.paginator = state.paginator;
+    });
+
   }
 
   ngOnInit(): void {
-    if ( this.users == undefined || this.users.length === 0) {
-      //this.service.findAll().subscribe(users => this.users = users);
-      this.route.paramMap.subscribe(params => {
-        const page = +(params.get('page')!) || 0;
-        this.service.findAllPageable(page).subscribe(pageable => {
-          this.users = pageable.content as User[];
-          this.paginator = pageable;
-          this.sharingDta.pageUsersEventEmitter.emit({users: this.users, paginator: this.paginator});
-        });
-      });
-    }
+    this.route.paramMap.subscribe(params => this.store.dispatch(load({page: +(params.get('page')!) || 0})));
   }
 
   onRemoveUser(id: number) {
-    this.sharingDta.idUserEventEmitter.emit(id);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.store.dispatch(remove({id}));
+      }
+    });
   }
 
   onSelectUser(user: User) {
