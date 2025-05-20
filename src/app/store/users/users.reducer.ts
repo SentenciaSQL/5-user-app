@@ -1,5 +1,5 @@
 import {createReducer, on} from "@ngrx/store";
-import {User} from "../models/user";
+import {User} from "../../models/user";
 import {
   findAll,
   find,
