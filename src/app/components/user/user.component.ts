@@ -37,7 +37,7 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => this.store.dispatch(load({page: +(params.get('page')!) || 0})));
+    this.route.paramMap.subscribe(params => this.store.dispatch(load({ page: +(params.get('page') || '0') })))
   }
 
   onRemoveUser(id: number) {
@@ -61,6 +61,6 @@ export class UserComponent implements OnInit {
   }
 
   get admin() {
-    return this.authService.user.isAdmin;
+    return this.authService.isAdmin();
   }
 }

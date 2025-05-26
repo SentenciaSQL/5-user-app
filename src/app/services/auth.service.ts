@@ -14,9 +14,9 @@ export class AuthService {
   private _user: any;
 
   constructor(private http: HttpClient, private store: Store<{auth: any}>) {
-    this.store.select('auth').subscribe((auth) => {
-      this._user = auth.user;
-    });
+    this.store.select('auth').subscribe(state => {
+      this._user = state;
+    })
   }
 
   loginUser({username, password} : any) : Observable<any> {
@@ -24,7 +24,6 @@ export class AuthService {
   }
 
   set user(user: any) {
-    this.store.dispatch(login({login: user}));
     sessionStorage.setItem('login', JSON.stringify(user));
   }
 
@@ -42,7 +41,7 @@ export class AuthService {
 
   getPayload(token: string) {
     if (token != null) {
-      return JSON.parse(atob(token.split('.')[1]));
+      return JSON.parse(atob(token.split(".")[1]));
     }
     return null;
   }

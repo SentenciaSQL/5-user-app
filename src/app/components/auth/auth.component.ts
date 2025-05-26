@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {User} from "../../models/user";
 import Swal from "sweetalert2";
-import {SharingDataService} from "../../services/sharing-data.service";
+import {Store} from "@ngrx/store";
+import {login} from "../../store/auth/auth.actions";
 
 @Component({
   selector: 'app-auth',
@@ -14,7 +15,7 @@ export class AuthComponent {
 
   user: User;
 
-  constructor(private sharingData: SharingDataService) {
+  constructor(private store: Store<{ auth: any }>) {
     this.user = new User();
   }
 
@@ -26,7 +27,7 @@ export class AuthComponent {
         'error'
       )
     } else {
-      this.sharingData.handleLoginEventEmitter.emit({username: this.user.username, password: this.user.password});
+      this.store.dispatch(login({username: this.user.username, password: this.user.password}));
     }
   }
 }

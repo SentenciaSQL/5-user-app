@@ -20,7 +20,7 @@ export class NavbarComponent {
   }
 
   get admin() {
-    return this.authService.user.isAdmin;
+    return this.authService.isAdmin();
   }
 
   handlerLogout() {
